@@ -72,7 +72,7 @@ async def init_db():
         )
         await db.commit()
 
-# ---- Курсы ----
+# ---- Курсы валют ----
 async def fetch_ton_usd(client: httpx.AsyncClient) -> float:
     r = await client.get(BINANCE_TICKER, timeout=10)
     r.raise_for_status()
@@ -83,7 +83,7 @@ async def fetch_usd_rub(client: httpx.AsyncClient) -> float:
     r = await client.get("https://open.er-api.com/v6/latest/USD", timeout=10)
     r.raise_for_status()
     data = r.json()
-    # Новый API: курсы в data["rates"]
+    
     if "rates" in data and "RUB" in data["rates"]:
         return float(data["rates"]["RUB"])
     raise ValueError(f"Unexpected response: {data}")
@@ -120,7 +120,7 @@ def refresh_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="🔔 Подписаться", callback_data="sub:menu")],
     ])
 
-# ---- Меню подписок ----
+# ---- Меню подписок пользователя ----
 
 def subscribe_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
@@ -131,7 +131,7 @@ def subscribe_menu() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="❌ Отписаться от всех", callback_data="unsub:all")],
     ])
 
-# ---- Команды ----
+# ---- Все команды ----
 
 @dp.message(Command("start"))
 async def cmd_start(msg: Message):
@@ -233,7 +233,7 @@ async def cb_unsub_all(call: CallbackQuery):
     await remove_all_subs(call.from_user.id)
     await call.answer("Подписки удалены.", show_alert=True)
 
-# ---- Работы с БД ----
+# ---- Работы с Базой Данных  ----
 
 async def add_sub(user_id: int, chat_id: int, kind: str, daily_time: str | None = None):
     async with aiosqlite.connect(DB_PATH) as db:
@@ -298,14 +298,13 @@ if __name__ == "__main__":
         print("Bot stopped")
 
 # ----- Файл: requirements.txt -----
-# aiogram>=3.5.0
+# aiogram>=3.7
 # httpx>=0.27.0
 # python-dotenv>=1.0.1
 # aiosqlite>=0.20.0
 
 # ----- Файл: .env.example -----
 # BOT_TOKEN=1234567890:ABCDEF-your-telegram-bot-token
-# DB_PATH=subscriptions.db
 
 # ----- Файл: Dockerfile -----
 # Используйте следующий Dockerfile в отдельном файле с именем Dockerfile:
@@ -317,4 +316,3 @@ if __name__ == "__main__":
 # COPY main.py ./
 # ENV PYTHONUNBUFFERED=1
 # CMD ["python", "main.py"]
-#

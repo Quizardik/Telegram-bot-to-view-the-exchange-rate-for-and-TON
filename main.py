@@ -13,13 +13,8 @@
 # Быстрый старт:
 # 1) Создайте бота у @BotFather и получите токен.
 # 2) Сохраните файлы main.py, requirements.txt и .env (пример ниже).
-# 3) Установите зависимости и запустите: 
-#    pip install -r requirements.txt
+# 3) Запустите: 
 #    python main.py
-# 
-# Docker:
-#    docker build -t tonusd-bot .
-#    docker run -e BOT_TOKEN=XXX --name tonusd tonusd-bot
 # 
 # Примечание по времени: ежедневные подписки исполняются по времени в формате UTC (например, 09:00 UTC).
 # 
